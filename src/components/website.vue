@@ -1,28 +1,28 @@
 <template>
   <div>
-    <div class="tit">告诉ecer你的职业吧</div>
+    <div class="tit">你想制作什么样的网站呢</div>
     <div class="occupationlist">
       <div class="item" v-for="(item , index) in 4">
         <div class="img"></div>
-        <div class="title">美食家</div>
+        <div class="title">个人博客</div>
       </div>
     </div>
     <div class="occupationlist">
       <div class="item" v-for="(item , index) in 3">
         <div class="img"></div>
-        <div class="title">美食家</div>
+        <div class="title">在线商城</div>
       </div>
     </div>
     <div class="occupationlist">
       <div class="item" v-for="(item , index) in 4">
         <div class="img"></div>
-        <div class="title">美食家</div>
+        <div class="title">出口贸易</div>
       </div>
     </div>
     <div class="occupationlist">
       <div class="item" v-for="(item , index) in 3">
         <div class="img"></div>
-        <div class="title">美食家</div>
+        <div class="title">营销宣传</div>
       </div>
     </div>
     <div class="jump">跳过</div>

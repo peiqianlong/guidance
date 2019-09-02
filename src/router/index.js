@@ -27,6 +27,14 @@ export default new Router({
             path: "/alltemp",
             name: "全部网站",
             component: resolve => require(['@/components/alltemp'], resolve),
+        }, {
+            path: "/occupation",
+            name: "职业选择",
+            component: resolve => require(['@/components/occupation'], resolve),
+        }, {
+            path: "/website",
+            name: "网站选择",
+            component: resolve => require(['@/components/website'], resolve),
         }]
     }]
 })
