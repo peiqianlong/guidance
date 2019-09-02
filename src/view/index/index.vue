@@ -182,6 +182,7 @@ export default {
   section {
     flex: 1;
     overflow: hidden;
+    overflow-y: auto;
   }
   footer {
     height: 40px;
