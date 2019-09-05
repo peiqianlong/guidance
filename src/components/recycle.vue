@@ -8,22 +8,24 @@
             <div class="ftit">选择垃圾站的网站，还原或者移除它。</div>
           </div>
           <div class="temoright">
-            <div class="laji">垃圾网站</div>
-            <div class="newecer">新建网站</div>
+            <div class="laji" @click="() => {this.$router.push('/index')}">我的网站</div>
+            <div class="newecer" @click="() => {this.$router.push('/')}">新建网站</div>
           </div>
         </div>
         <div class="tep_list container-fluid">
           <div class="row" style="margin:0;">
             <div
               class="templist col-lg-3 col-md-4 col-sm-6 col-xs-12"
-              v-for="item in 20"
+              v-for="item in 2"
               :key="item"
             >
               <div class="list">
                 <div class="boxshow">
                   <img src="../assets/temp.png" alt />
                   <div class="zhezhao">
-                    <div class="start">开始编辑</div>
+                    <div class="pre">移除</div>
+
+                    <div class="start">还原</div>
                   </div>
                 </div>
                 <div class="Explain">
@@ -38,6 +40,9 @@
       </div>
     </div>
     <div class="newecer" v-else>
+      <div class="img">
+        <img src="../assets/web_img_empty@2x.png" alt />
+      </div>
       <div class="tit">垃圾站中没有网站哦,</div>
       <div class="tit">您目前还没有删除网站到垃圾站中。</div>
     </div>
@@ -52,6 +57,7 @@ export default {
 .reycle {
   width: 100%;
   height: 100%;
+  overflow: auto;
   .temp {
     background: rgba(255, 255, 255, 1);
     box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.2);
@@ -122,9 +128,9 @@ export default {
           display: flex;
           flex-direction: column;
           background: rgba(255, 255, 255, 1);
-          border: 1px solid rgba(0, 0, 0, 0.0784313725490196);
+          border: 1px solid rgba(221, 221, 221, 1);
           box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-          border-radius: 8px;
+          border-radius: 4px;
           margin-bottom: 24px;
           padding: 12px 12px 0px 12px;
           box-sizing: border-box;
@@ -134,7 +140,11 @@ export default {
             overflow: hidden;
             position: relative;
             img {
-              width: 100%;
+              max-height: 100%;
+              position: absolute;
+              left: 50%;
+              top: 50%;
+              transform: translate(-50%, -50%);
             }
             .zhezhao {
               position: absolute;
@@ -142,7 +152,7 @@ export default {
               height: 100%;
               left: 0;
               top: 0;
-              background: rgba(0, 0, 0, 0.6);
+              background: rgba(0, 0, 0, 0.8);
               border-radius: 2px;
               display: flex;
               flex-direction: column;
@@ -208,6 +218,16 @@ export default {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  .img {
+    width: 277px;
+    height: 217px;
+    margin-bottom: 36px;
+    flex-shrink: 0;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
   .tit {
     width: 272px;
     height: 25px;

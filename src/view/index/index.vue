@@ -12,7 +12,15 @@
         </ul>
       </div>
       <div class="headerright">
-        <el-input class="searchinput" v-model="searchval" placeholder="search"></el-input>
+        <div class="input" v-if="routerpath">
+          <el-input
+            class="searchinput"
+            v-on:keyup.enter="search"
+            v-model="searchval"
+            placeholder="search"
+          ></el-input>
+          <i @click="search" class="iconfont icon-sousuo"></i>
+        </div>
         <div class="tips">
           <i class="iconfont icon-manage_icon_message4"></i>
           <span></span>
@@ -23,7 +31,7 @@
         </div>
       </div>
     </div>
-    <section>
+    <section style="overflow: hidden;">
       <transition name="slide-fade">
         <router-view />
       </transition>
@@ -43,6 +51,22 @@ export default {
   methods: {
     SelectMenu(val) {
       this.isactive = val;
+    },
+    search() {}
+  },
+  computed: {
+    routerpath() {
+      let path = this.$route.path;
+      if (
+        path == "/" ||
+        path == "/occupation" ||
+        path == "/website" ||
+        path == "/alltemp"
+      ) {
+        return false;
+      } else {
+        return true;
+      }
     }
   }
 };
@@ -112,8 +136,18 @@ export default {
       display: flex;
       justify-content: flex-end;
       align-items: center;
-      .searchinput {
-        width: 440px;
+      .input {
+        position: relative;
+        i {
+          position: absolute;
+          right: 11px;
+          top: 50%;
+          transform: translateY(-50%);
+          cursor: pointer;
+        }
+        .searchinput {
+          width: 440px;
+        }
         /deep/.el-input__inner {
           width: 100%;
           height: 36px;
@@ -138,6 +172,7 @@ export default {
         justify-content: center;
         align-items: center;
         position: relative;
+        cursor: pointer;
         i {
           color: #909090;
           font-size: 18px;
@@ -161,6 +196,7 @@ export default {
         margin-right: 16px;
         display: flex;
         align-items: center;
+        cursor: pointer;
         span {
           margin-left: 9px;
           font-size: 14px;
@@ -210,19 +246,4 @@ export default {
 .slide-fade-leave-to {
   transform: translate(100%);
 }
-// .slide-fade-enter-active {
-//   transition: all 0.3s ease;
-// }
-// .slide-fade-leave-active {
-//   transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
-// }
-// .slide-fade-enter {
-//   transform: translateX(-100%);
-//   opacity: 1;
-// }
-// .slide-fade-leave-to
-// /* .slide-fade-leave-active for below version 2.1.8 */ {
-//   transform: translateX(100%);
-//   opacity: 0;
-// }
 </style>

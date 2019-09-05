@@ -4,7 +4,7 @@
       <div class="temp">
         <div class="mytemp">
           <div class="temoleft">
-            <el-select v-model="value" placeholder="请选择">
+            <el-select @change="getInfo" v-model="value" placeholder="请选择">
               <el-option
                 v-for="item in options"
                 :key="item.value"
@@ -12,9 +12,14 @@
                 :value="item.value"
               ></el-option>
             </el-select>
-            <el-select v-model="value" placeholder="请选择" style="margin-left:12px">
+            <el-select
+              @change="getInfo"
+              v-model="value2"
+              placeholder="请选择"
+              style="margin-left:12px"
+            >
               <el-option
-                v-for="item in options"
+                v-for="item in options2"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -22,12 +27,12 @@
             </el-select>
           </div>
           <div class="temoright">
-            <el-select v-model="value" placeholder="请选择">
+            <el-select @change="getInfo" v-model="value3" placeholder="请选择">
               <el-option
-                v-for="item in options"
-                :key="item.value"
+                v-for="item in options3"
+                :key="item.id"
                 :label="item.label"
-                :value="item.value"
+                :value="item.id"
               ></el-option>
             </el-select>
           </div>
@@ -36,19 +41,23 @@
           <div class="row" style="margin:0;">
             <div
               class="templist col-lg-3 col-md-4 col-sm-6 col-xs-12"
-              v-for="item in 20"
-              :key="item"
+              v-for="(item,index) in templist"
+              :key="index"
             >
               <div class="list">
                 <div class="boxshow">
                   <img src="../assets/temp.png" alt />
                   <div class="zhezhao">
+                    <div class="pre">预览</div>
                     <div class="start">开始编辑</div>
                   </div>
                 </div>
                 <div class="Explain">
-                  <span>活力明亮极简风多用途模板</span>
-                  <span class="free">未发布</span>
+                  <span>{{item.title}}</span>
+                  <span
+                    class="free"
+                    :style="{'color':item.price == 'Free' ? '#777777': '#3CA860'}"
+                  >{{item.price}}</span>
                   <!-- <span class="money">￥6.9</span> -->
                 </div>
               </div>
@@ -60,34 +69,52 @@
   </div>
 </template>
 <script>
+import { alltemp, alltemptype, alltempindustry } from "../api/apis";
 export default {
   name: "alltemp",
   data() {
     return {
-      options: [
+      options: [],
+      value: "",
+      options2: [],
+      value2: "",
+      options3: [
         {
-          value: "选项1",
-          label: "黄金糕"
+          id: "created_at",
+          label: "热门"
         },
         {
-          value: "选项2",
-          label: "双皮奶"
-        },
-        {
-          value: "选项3",
-          label: "蚵仔煎"
-        },
-        {
-          value: "选项4",
-          label: "龙须面"
-        },
-        {
-          value: "选项5",
-          label: "北京烤鸭"
+          id: "user_num",
+          label: "最新"
         }
       ],
-      value: ""
+      value3: "created_at",
+      templist: []
     };
+  },
+  created() {
+    this.getInfo();
+  },
+  methods: {
+    getInfo() {
+      let prams = {
+        title: "",
+        type: this.value2,
+        industry: this.value,
+        sort: this.value3
+      };
+      alltemp(prams).then(res => {
+        if (res.data.status == 0) {
+          this.templist = res.data.data.themes;
+        }
+      });
+      alltemptype().then(res => {
+        this.options2 = res.data.data.types;
+      }),
+        alltempindustry().then(res => {
+          this.options = res.data.data.types;
+        });
+    }
   }
 };
 </script>
@@ -95,6 +122,7 @@ export default {
 .reycle {
   width: 100%;
   height: 100%;
+  overflow: auto;
   .temp {
     background: rgba(255, 255, 255, 1);
     box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.2);
@@ -143,9 +171,9 @@ export default {
           display: flex;
           flex-direction: column;
           background: rgba(255, 255, 255, 1);
-          border: 1px solid rgba(0, 0, 0, 0.0784313725490196);
+          border: 1px solid rgba(221, 221, 221, 1);
           box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-          border-radius: 8px;
+          border-radius: 4px;
           margin-bottom: 24px;
           padding: 12px 12px 0px 12px;
           box-sizing: border-box;
@@ -155,7 +183,11 @@ export default {
             overflow: hidden;
             position: relative;
             img {
-              width: 100%;
+              max-height: 100%;
+              position: absolute;
+              left: 50%;
+              top: 50%;
+              transform: translate(-50%,-50%);
             }
             .zhezhao {
               position: absolute;
@@ -163,7 +195,7 @@ export default {
               height: 100%;
               left: 0;
               top: 0;
-              background: rgba(0, 0, 0, 0.6);
+              background: rgba(0, 0, 0, 0.8);
               border-radius: 2px;
               display: flex;
               flex-direction: column;
@@ -209,6 +241,10 @@ export default {
               line-height: 20px;
               line-height: 42px;
               color: rgba(0, 0, 0, 0.65);
+              width: 200px;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
             }
             .free {
               font-size: 14px;

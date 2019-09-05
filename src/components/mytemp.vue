@@ -1,23 +1,39 @@
 <template>
-  <div>
-    <div class="temp">
+  <div style="height:100%;overflow:auto;padding:16px;">
+    <div v-if="show" class="temp">
       <div class="mytemp">
         <div class="temoleft">
           <div class="tit">我的网站</div>
           <div class="ftit">选择一个网站编辑，或者开始制作一个新网站。</div>
         </div>
         <div class="temoright">
-          <div class="laji">垃圾网站</div>
-          <div class="newecer">新建网站</div>
+          <div class="laji" @click="() => {this.$router.push('/recycle')}">垃圾网站</div>
+          <div class="newecer" @click="() => {this.$router.push('/')}">新建网站</div>
         </div>
       </div>
       <div class="tep_list container-fluid">
         <div class="row" style="margin:0;">
-          <div class="templist col-lg-3 col-md-4 col-sm-6 col-xs-12" v-for="item in 20" :key="item">
+          <div
+            class="templist col-lg-3 col-md-4 col-sm-6 col-xs-12"
+            v-for="(item,index) in 3"
+            :key="item"
+          >
             <div class="list">
               <div class="boxshow">
                 <img src="../assets/temp.png" alt />
                 <div class="zhezhao">
+                  <div class="icon">
+                    <i class="iconfont icon-icon_more" @click="openul(index)"></i>
+                    <transition name="el-fade-in-linear">
+                      <ul v-show="showul==index">
+                        <li>预览</li>
+                        <li>重命名</li>
+                        <li>复制</li>
+                        <li>发布</li>
+                        <li>删除</li>
+                      </ul>
+                    </transition>
+                  </div>
                   <div class="start">开始编辑</div>
                 </div>
               </div>
@@ -31,11 +47,34 @@
         </div>
       </div>
     </div>
+    <div v-else class="newecer">
+      <div class="img">
+        <img src="../assets/web_img_empty@2x.png" alt />
+      </div>
+      <div class="tit">您还没有创建网站哦,</div>
+      <div class="tit">马上创建一个属于您的个性化网站吧！</div>
+      <div class="ecerbtn">新建网站</div>
+    </div>
   </div>
 </template>
 <script>
 export default {
-  name: "mytemp"
+  name: "mytemp",
+  data() {
+    return {
+      show: true,
+      showul: -1
+    };
+  },
+  methods: {
+    openul(val) {
+      if (val == this.showul) {
+        this.showul = "";
+      } else {
+        this.showul = val;
+      }
+    }
+  }
 };
 </script>
 
@@ -49,7 +88,6 @@ export default {
   padding-left: 23px;
   padding-right: 23px;
   padding-top: 0;
-  margin: 16px;
   .mytemp {
     height: 106px;
     display: flex;
@@ -110,9 +148,9 @@ export default {
         display: flex;
         flex-direction: column;
         background: rgba(255, 255, 255, 1);
-        border: 1px solid rgba(0, 0, 0, 0.0784313725490196);
+        border: 1px solid rgba(221, 221, 221, 1);
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-        border-radius: 8px;
+        border-radius: 4px;
         margin-bottom: 24px;
         padding: 12px 12px 0px 12px;
         box-sizing: border-box;
@@ -121,8 +159,13 @@ export default {
           box-sizing: border-box;
           overflow: hidden;
           position: relative;
+
           img {
-            width: 100%;
+            max-height: 100%;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
           }
           .zhezhao {
             position: absolute;
@@ -130,7 +173,7 @@ export default {
             height: 100%;
             left: 0;
             top: 0;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.8);
             border-radius: 2px;
             display: flex;
             flex-direction: column;
@@ -138,6 +181,40 @@ export default {
             justify-content: center;
             transform: translateY(-100%);
             transition: all 150ms linear;
+            .icon {
+              position: absolute;
+              width: 36px;
+              height: 36px;
+              z-index: 10;
+              right: 0px;
+              top: 0px;
+              line-height: 36px;
+              i {
+                color: #fff;
+                font-size: 30px;
+                position: absolute;
+                cursor: pointer;
+              }
+              ul {
+                background: #fff;
+                position: absolute;
+                top: 36px;
+                left: -21px;
+                border: 1px solid rgba(221, 221, 221, 1);
+                box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.12);
+                border-radius: 4px;
+                li {
+                  line-height: 22px;
+                  padding: 0 5px;
+                  white-space: nowrap;
+                  cursor: pointer;
+                }
+                li:hover {
+                  background: rgba(245, 245, 245, 1);
+                }
+              }
+            }
+
             .pre,
             .start {
               width: 120px;
@@ -185,6 +262,53 @@ export default {
           }
         }
       }
+    }
+  }
+}
+</style>
+<style lang="less" scoped>
+.newecer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  .img {
+    width: 236px;
+    height: 212px;
+    margin-bottom: 36px;
+    flex-shrink: 0;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .tit {
+    width: 272px;
+    height: 25px;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 28px;
+    color: rgba(0, 0, 0, 0.65);
+    text-align: center;
+  }
+  .ecerbtn {
+    width: 120px;
+    height: 40px;
+    background: rgba(60, 168, 96, 1);
+    opacity: 1;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 40px;
+    color: rgba(255, 255, 255, 1);
+    text-align: center;
+    opacity: 1;
+    margin-top: 24px;
+    cursor: pointer;
+    a {
+      color: rgba(255, 255, 255, 1);
     }
   }
 }

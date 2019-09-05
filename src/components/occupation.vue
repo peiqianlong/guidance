@@ -1,36 +1,41 @@
 <template>
-  <div>
+  <div style="height:100%;overflow:auto;padding-top: 34px;">
     <div class="tit">告诉ecer你的职业吧</div>
     <div class="occupationlist">
-      <div class="item" v-for="(item , index) in 4">
+      <div class="item" v-for="(item , index) in 4" @click="Next" :key="index">
         <div class="img"></div>
         <div class="title">美食家</div>
       </div>
     </div>
     <div class="occupationlist">
-      <div class="item" v-for="(item , index) in 3">
+      <div class="item" v-for="(item , index) in 3" @click="Next" :key="index">
         <div class="img"></div>
         <div class="title">美食家</div>
       </div>
     </div>
     <div class="occupationlist">
-      <div class="item" v-for="(item , index) in 4">
+      <div class="item" v-for="(item , index) in 4" @click="Next" :key="index">
         <div class="img"></div>
         <div class="title">美食家</div>
       </div>
     </div>
     <div class="occupationlist">
-      <div class="item" v-for="(item , index) in 3">
+      <div class="item" v-for="(item , index) in 3" @click="Next" :key="index">
         <div class="img"></div>
         <div class="title">美食家</div>
       </div>
     </div>
-    <div class="jump">跳过</div>
+    <div class="jump" @click="Next">跳过</div>
   </div>
 </template>
 <script>
 export default {
-  name: "occupation"
+  name: "occupation",
+  methods: {
+    Next() {
+      this.$router.push("/website");
+    }
+  }
 };
 </script>
 <style lang="less" scoped>
@@ -43,7 +48,6 @@ export default {
   line-height: 40px;
   color: rgba(60, 168, 96, 1);
   opacity: 1;
-  margin-top: 34px;
   margin-bottom: 80px;
 }
 .occupationlist {
@@ -54,7 +58,6 @@ export default {
   justify-content: center;
   margin-bottom: 24px;
   .item {
-    width: 150px;
     height: 84px;
     background: rgba(245, 245, 245, 1);
     border: 1px solid rgba(221, 221, 221, 1);
@@ -79,6 +82,8 @@ export default {
       font-weight: 400;
       color: rgba(17, 17, 17, 1);
       opacity: 1;
+      margin-right: 24px;
+      white-space: nowrap;
       margin-right: 24px;
     }
   }

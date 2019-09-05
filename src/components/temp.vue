@@ -1,10 +1,10 @@
 <template>
-  <div>
+  <div style="height:100%;overflow:auto;padding-top: 34px;">
     <div class="tit">下面是Ecer推荐给您的模板,尽情享用吧</div>
     <div class="temp">
       <div class="tep_list container-fluid">
         <div class="row" style="margin:0;">
-          <div class="templist col-lg-3 col-md-4 col-sm-6 col-xs-12" v-for="item in 9" :key="item">
+          <div class="templist col-lg-3 col-md-4 col-sm-6 col-xs-12" v-for="item in 30" :key="item">
             <div class="list">
               <div class="boxshow">
                 <img src="../assets/temp.png" alt />
@@ -23,12 +23,17 @@
         </div>
       </div>
     </div>
-    <div class="morebtn">探索更多模板</div>
+    <div class="morebtn" @click="GoTempMore">探索更多模板</div>
   </div>
 </template>
 <script>
 export default {
-  name: "temp"
+  name: "temp",
+  methods: {
+    GoTempMore() {
+      this.$router.push("/occupation");
+    }
+  }
 };
 </script>
 
@@ -43,7 +48,6 @@ export default {
   opacity: 1;
   text-align: center;
   line-height: 40px;
-  margin-top: 34px;
   margin-bottom: 20px;
 }
 .temp {
@@ -64,9 +68,9 @@ export default {
         display: flex;
         flex-direction: column;
         background: rgba(255, 255, 255, 1);
-        border: 1px solid rgba(0, 0, 0, 0.0784313725490196);
+        border: 1px solid rgba(221, 221, 221, 1);
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-        border-radius: 8px;
+        border-radius: 4px;
         margin-bottom: 24px;
         padding: 12px 12px 0px 12px;
         box-sizing: border-box;
@@ -76,7 +80,11 @@ export default {
           overflow: hidden;
           position: relative;
           img {
-            width: 100%;
+            max-height: 100%;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
           }
           .zhezhao {
             position: absolute;
@@ -84,7 +92,7 @@ export default {
             height: 100%;
             left: 0;
             top: 0;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.8);
             border-radius: 2px;
             display: flex;
             flex-direction: column;
