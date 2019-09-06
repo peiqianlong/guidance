@@ -2,27 +2,27 @@
   <div style="height:100%;overflow:auto;padding-top: 34px;">
     <div class="tit">告诉ecer你的职业吧</div>
     <div class="occupationlist">
-      <div class="item" v-for="(item , index) in 4" @click="Next" :key="index">
+      <div class="item" v-for="(item , index) in 4" @click="Next('美食家')" :key="index">
         <div class="img"></div>
         <div class="title">美食家</div>
       </div>
     </div>
     <div class="occupationlist">
-      <div class="item" v-for="(item , index) in 3" @click="Next" :key="index">
+      <div class="item" v-for="(item , index) in 3" @click="Next('旅者')" :key="index">
         <div class="img"></div>
-        <div class="title">美食家</div>
+        <div class="title">旅者</div>
       </div>
     </div>
     <div class="occupationlist">
-      <div class="item" v-for="(item , index) in 4" @click="Next" :key="index">
+      <div class="item" v-for="(item , index) in 4" @click="Next('商户')" :key="index">
         <div class="img"></div>
-        <div class="title">美食家</div>
+        <div class="title">商户</div>
       </div>
     </div>
     <div class="occupationlist">
-      <div class="item" v-for="(item , index) in 3" @click="Next" :key="index">
+      <div class="item" v-for="(item , index) in 3" @click="Next('摄影师')" :key="index">
         <div class="img"></div>
-        <div class="title">美食家</div>
+        <div class="title">摄影师</div>
       </div>
     </div>
     <div class="jump" @click="Next">跳过</div>
@@ -32,8 +32,13 @@
 export default {
   name: "occupation",
   methods: {
-    Next() {
-      this.$router.push("/website");
+    Next(val) {
+      this.$router.push({
+        path: "/website",
+        query: {
+          id: val
+        }
+      });
     }
   }
 };

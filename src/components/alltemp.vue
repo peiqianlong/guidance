@@ -5,12 +5,7 @@
         <div class="mytemp">
           <div class="temoleft">
             <el-select @change="getInfo" v-model="value" placeholder="请选择">
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
+              <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
             <el-select
               @change="getInfo"
@@ -20,9 +15,9 @@
             >
               <el-option
                 v-for="item in options2"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
               ></el-option>
             </el-select>
           </div>
@@ -48,8 +43,8 @@
                 <div class="boxshow">
                   <img src="../assets/temp.png" alt />
                   <div class="zhezhao">
-                    <div class="pre">预览</div>
-                    <div class="start">开始编辑</div>
+                    <div class="pre" @click="preview(item.id)">预览</div>
+                    <div class="start" @click="starttemp(item.id)">开始编辑</div>
                   </div>
                 </div>
                 <div class="Explain">
@@ -69,7 +64,7 @@
   </div>
 </template>
 <script>
-import { alltemp, alltemptype, alltempindustry } from "../api/apis";
+import { alltemp, alltemptype, alltempindustry,temppreview,edittemp} from "../api/apis";
 export default {
   name: "alltemp",
   data() {
@@ -98,10 +93,9 @@ export default {
   methods: {
     getInfo() {
       let prams = {
-        title: "",
-        type: this.value2,
-        industry: this.value,
-        sort: this.value3
+        type: "",
+        industry: "",
+        sort: ""
       };
       alltemp(prams).then(res => {
         if (res.data.status == 0) {
@@ -112,8 +106,20 @@ export default {
         this.options2 = res.data.data.types;
       }),
         alltempindustry().then(res => {
-          this.options = res.data.data.types;
+          this.options = res.data.data.industries;
         });
+    },
+    //预览
+     preview(val) {
+      temppreview(val).then(res => {
+        window.open("http:" + res.data.data.preview_url, "_black");
+      });
+    },
+    //编辑
+    starttemp(val) {
+      edittemp({ site_id: val }).then(res => {
+        window.open("http://www.site.maoyt.com", "_black");
+      });
     }
   }
 };
@@ -183,11 +189,12 @@ export default {
             overflow: hidden;
             position: relative;
             img {
-              max-height: 100%;
+              height: 100%;
+              width: 100%;
               position: absolute;
               left: 50%;
               top: 50%;
-              transform: translate(-50%,-50%);
+              transform: translate(-50%, -50%);
             }
             .zhezhao {
               position: absolute;

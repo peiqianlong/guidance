@@ -2,25 +2,25 @@
   <div style="height:100%;overflow:auto;padding-top: 34px;">
     <div class="tit">你想制作什么样的网站呢</div>
     <div class="occupationlist">
-      <div class="item" v-for="(item , index) in 4" @click="Next" :key="index">
+      <div class="item" v-for="(item , index) in 4" @click="Next('个人博客')" :key="index">
         <div class="img"></div>
         <div class="title">个人博客</div>
       </div>
     </div>
     <div class="occupationlist">
-      <div class="item" v-for="(item , index) in 3" @click="Next" :key="index">
+      <div class="item" v-for="(item , index) in 3" @click="Next('在线商城')" :key="index">
         <div class="img"></div>
         <div class="title">在线商城</div>
       </div>
     </div>
     <div class="occupationlist">
-      <div class="item" v-for="(item , index) in 4" @click="Next" :key="index">
+      <div class="item" v-for="(item , index) in 4" @click="Next('出口贸易')" :key="index">
         <div class="img"></div>
         <div class="title">出口贸易</div>
       </div>
     </div>
     <div class="occupationlist">
-      <div class="item" v-for="(item , index) in 3" @click="Next" :key="index">
+      <div class="item" v-for="(item , index) in 3" @click="Next('营销宣传')" :key="index">
         <div class="img"></div>
         <div class="title">营销宣传</div>
       </div>
@@ -32,8 +32,11 @@
 export default {
   name: "occupation",
   methods: {
-    Next() {
-      this.$router.push("/alltemp");
+    Next(val) {
+      this.$router.push({
+        path: "/alltemp",
+        query: { id1: this.$route.query.id, id2: val }
+      });
     }
   }
 };

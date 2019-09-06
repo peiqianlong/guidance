@@ -7,16 +7,16 @@
           <div class="ftit">选择一个网站编辑，或者开始制作一个新网站。</div>
         </div>
         <div class="temoright">
-          <div class="laji" @click="() => {this.$router.push('/recycle')}">垃圾网站</div>
-          <div class="newecer" @click="() => {this.$router.push('/')}">新建网站</div>
+          <div class="laji" @click="() => {$router.push('/recycle')}">垃圾网站</div>
+          <div class="newecer" @click="() => {$router.push('/')}">新建网站</div>
         </div>
       </div>
       <div class="tep_list container-fluid">
         <div class="row" style="margin:0;">
           <div
             class="templist col-lg-3 col-md-4 col-sm-6 col-xs-12"
-            v-for="(item,index) in 3"
-            :key="item"
+            v-for="(item,index) in tempinfo"
+            :key="index"
           >
             <div class="list">
               <div class="boxshow">
@@ -26,21 +26,23 @@
                     <i class="iconfont icon-icon_more" @click="openul(index)"></i>
                     <transition name="el-fade-in-linear">
                       <ul v-show="showul==index">
-                        <li>预览</li>
-                        <li>重命名</li>
-                        <li>复制</li>
-                        <li>发布</li>
-                        <li>删除</li>
+                        <li @click="preview(item.id)">预览</li>
+                        <li @click="rename(item.id)">重命名</li>
+                        <li @click="copy(item.id)">复制</li>
+                        <li @click="fabu(item.id)">发布</li>
+                        <li @click="deltemp(item.id)">删除</li>
                       </ul>
                     </transition>
                   </div>
-                  <div class="start">开始编辑</div>
+                  <div class="start" @click="starttemp(item.id)">开始编辑</div>
                 </div>
               </div>
               <div class="Explain">
-                <span>活力明亮极简风多用途模板</span>
-                <span class="free">未发布</span>
-                <!-- <span class="money">￥6.9</span> -->
+                <span>{{item.name}}</span>
+                <span
+                  class="free"
+                  :style="{'color':item.status == '未发布' ? '#777777': '#3CA860'}"
+                >{{item.status}}</span>
               </div>
             </div>
           </div>
@@ -53,27 +55,56 @@
       </div>
       <div class="tit">您还没有创建网站哦,</div>
       <div class="tit">马上创建一个属于您的个性化网站吧！</div>
-      <div class="ecerbtn">新建网站</div>
+      <div class="ecerbtn" @click="()=>{$router.push('/')}">新建网站</div>
     </div>
   </div>
 </template>
 <script>
+import { mytemp, edittemp, temppreview } from "../api/apis";
 export default {
   name: "mytemp",
   data() {
     return {
       show: true,
-      showul: -1
+      showul: -1,
+      tempinfo: ""
     };
   },
+  created() {
+    this.getInfo();
+  },
   methods: {
+    getInfo() {
+      let prams = {
+        name: ""
+      };
+      mytemp(prams).then(res => {
+        this.tempinfo = res.data.data.sites;
+      });
+    },
     openul(val) {
       if (val == this.showul) {
-        this.showul = "";
+        this.showul = -1;
       } else {
         this.showul = val;
       }
-    }
+    },
+    //开始编辑
+    starttemp(val) {
+      edittemp({ site_id: val }).then(res => {
+        window.open("http://www.site.maoyt.com", "_black");
+      });
+    },
+    //预览
+    preview(val) {
+      temppreview(val).then(res => {
+        window.open("http:" + res.data.data.preview_url, "_black");
+      });
+    },
+    rename(val) {},
+    deltemp(val) {},
+    copy(val) {},
+    fabu(val) {}
   }
 };
 </script>
@@ -161,7 +192,8 @@ export default {
           position: relative;
 
           img {
-            max-height: 100%;
+            width: 100%;
+            height: 100%;
             position: absolute;
             left: 50%;
             top: 50%;
@@ -253,6 +285,10 @@ export default {
             line-height: 20px;
             line-height: 42px;
             color: rgba(0, 0, 0, 0.65);
+            width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
           }
           .free {
             font-size: 14px;

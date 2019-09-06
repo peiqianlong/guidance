@@ -4,19 +4,25 @@
     <div class="temp">
       <div class="tep_list container-fluid">
         <div class="row" style="margin:0;">
-          <div class="templist col-lg-3 col-md-4 col-sm-6 col-xs-12" v-for="item in 30" :key="item">
+          <div
+            class="templist col-lg-3 col-md-4 col-sm-6 col-xs-12"
+            v-for="(item,index) in tempinfo"
+            :key="index"
+          >
             <div class="list">
               <div class="boxshow">
                 <img src="../assets/temp.png" alt />
                 <div class="zhezhao">
-                  <div class="pre">预览</div>
-                  <div class="start">开始编辑</div>
+                  <div class="pre" @click="preview(item.id)">预览</div>
+                  <div class="start" @click="starttemp(item.id)">开始编辑</div>
                 </div>
               </div>
               <div class="Explain">
-                <span>活力明亮极简风多用途模板</span>
-                <span class="free">free</span>
-                <!-- <span class="money">￥6.9</span> -->
+                <span>{{item.title}}</span>
+                <span
+                  class="free"
+                  :style="{'color':item.price == 'Free' ? '#777777': '#3CA860'}"
+                >{{item.price}}</span>
               </div>
             </div>
           </div>
@@ -27,11 +33,38 @@
   </div>
 </template>
 <script>
+import { temptuijian, edittemp, temppreview } from "../api/apis";
 export default {
   name: "temp",
+  data() {
+    return {
+      tempinfo: ""
+    };
+  },
+  created() {
+    this.getInfo();
+  },
   methods: {
+    getInfo() {
+      temptuijian({ limit: 30 }).then(res => {
+        this.tempinfo = res.data.data.themes;
+      });
+    },
+
     GoTempMore() {
       this.$router.push("/occupation");
+    },
+    //预览
+    preview(val) {
+      temppreview(val).then(res => {
+        window.open("http:" + res.data.data.preview_url, "_black");
+      });
+    },
+    //编辑
+    starttemp(val) {
+      edittemp({ site_id: val }).then(res => {
+        window.open("http://www.site.maoyt.com", "_black");
+      });
     }
   }
 };
@@ -80,7 +113,8 @@ export default {
           overflow: hidden;
           position: relative;
           img {
-            max-height: 100%;
+            height: 100%;
+            width: 100%;
             position: absolute;
             left: 50%;
             top: 50%;
@@ -138,6 +172,11 @@ export default {
             font-weight: 400;
             line-height: 20px;
             color: rgba(0, 0, 0, 0.65);
+            line-height: 42px;
+            width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
           }
           .free {
             font-size: 14px;
@@ -145,6 +184,7 @@ export default {
             line-height: 20px;
             color: rgba(0, 0, 0, 0.65);
             opacity: 1;
+            line-height: 42px;
           }
         }
       }
