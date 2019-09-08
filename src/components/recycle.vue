@@ -1,6 +1,6 @@
 <template>
   <div class="reycle">
-    <div v-if="true">
+    <div v-if="tempinfo.length !== 0">
       <div class="temp">
         <div class="mytemp">
           <div class="temoleft">
@@ -16,8 +16,8 @@
           <div class="row" style="margin:0;">
             <div
               class="templist col-lg-3 col-md-4 col-sm-6 col-xs-12"
-              v-for="item in 2"
-              :key="item"
+              v-for="(item,index) in tempinfo"
+              :key="index"
             >
               <div class="list">
                 <div class="boxshow">
@@ -25,12 +25,12 @@
                   <div class="zhezhao">
                     <div class="pre">移除</div>
 
-                    <div class="start">还原</div>
+                    <div class="start" @click="recovertemp(item.id)">还原</div>
                   </div>
                 </div>
                 <div class="Explain">
-                  <span>活力明亮极简风多用途模板</span>
-                  <span class="free">未发布</span>
+                  <span>{{item.name}}</span>
+                  <span class="free">{{item.status}}</span>
                   <!-- <span class="money">￥6.9</span> -->
                 </div>
               </div>
@@ -49,8 +49,40 @@
   </div>
 </template>
 <script>
+import { recycle, recover } from "../api/apis";
+
 export default {
-  name: "recycle"
+  name: "recycle",
+  data() {
+    return {
+      tempinfo: []
+    };
+  },
+  created() {
+    this.getInfo();
+  },
+  methods: {
+    getInfo() {
+      recycle().then(res => {
+        this.tempinfo = res.data.data.sites;
+      });
+    },
+    recovertemp(val) {
+      recover({ site_id: val, status: 1 }).then(res => {
+        if (res.data.status == 0) {
+          this.$message({
+            type: "success",
+            message: "恢复成功"
+          });
+        } else {
+          this.$message({
+            type: "error",
+            message: res.data.msg
+          });
+        }
+      });
+    }
+  }
 };
 </script>
 <style lang="less" scoped>
@@ -198,6 +230,10 @@ export default {
               line-height: 20px;
               line-height: 42px;
               color: rgba(0, 0, 0, 0.65);
+              width: 200px;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
             }
             .free {
               font-size: 14px;

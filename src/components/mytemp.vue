@@ -60,14 +60,14 @@
   </div>
 </template>
 <script>
-import { mytemp, edittemp, temppreview } from "../api/apis";
+import { mytemp, edittemp, temppreview, rename, delrecover } from "../api/apis";
 export default {
   name: "mytemp",
   data() {
     return {
       show: true,
       showul: -1,
-      tempinfo: ""
+      tempinfo: []
     };
   },
   created() {
@@ -101,8 +101,36 @@ export default {
         window.open("http:" + res.data.data.preview_url, "_black");
       });
     },
-    rename(val) {},
-    deltemp(val) {},
+    rename(val) {
+      this.$prompt("请输入您要修改的名字", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消"
+      })
+        .then(({ value }) => {
+          rename({ site_id: val, name: value }).then(res => {
+            if (res.data.status == 0) {
+              this.$message({
+                type: "success",
+                message: "您要修改的名字是: " + value
+              });
+            } else {
+              this.$message({
+                type: "error",
+                message: "服务器繁忙"
+              });
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "取消修改"
+          });
+        });
+    },
+    deltemp(val) {
+      delrecover({ site_id: val, status: 0 }).then(res => {});
+    },
     copy(val) {},
     fabu(val) {}
   }
