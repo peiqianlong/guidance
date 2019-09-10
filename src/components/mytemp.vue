@@ -1,14 +1,14 @@
 <template>
   <div style="height:100%;overflow:auto;padding:16px;">
-    <div v-if="show" class="temp">
+    <div v-if="tempinfo.length > 0" class="temp">
       <div class="mytemp">
         <div class="temoleft">
           <div class="tit">我的网站</div>
           <div class="ftit">选择一个网站编辑，或者开始制作一个新网站。</div>
         </div>
         <div class="temoright">
-          <div class="laji" @click="() => {$router.push('/recycle')}">垃圾网站</div>
-          <div class="newecer" @click="() => {$router.push('/')}">新建网站</div>
+          <div class="laji" @click="() => {$router.push('/recycle')}">回收站</div>
+          <div class="newecer" @click="() => {$router.push('/temp')}">新建网站</div>
         </div>
       </div>
       <div class="tep_list container-fluid">
@@ -34,7 +34,7 @@
                       </ul>
                     </transition>
                   </div>
-                  <div class="start" @click="starttemp(item.id)">开始编辑</div>
+                  <div class="start" @click="starttemp(item.id,item.type)">开始编辑</div>
                 </div>
               </div>
               <div class="Explain">
@@ -55,12 +55,20 @@
       </div>
       <div class="tit">您还没有创建网站哦,</div>
       <div class="tit">马上创建一个属于您的个性化网站吧！</div>
-      <div class="ecerbtn" @click="()=>{$router.push('/')}">新建网站</div>
+      <div class="ecerbtn" @click="()=>{$router.push('/temp')}">新建网站</div>
     </div>
   </div>
 </template>
 <script>
-import { mytemp, edittemp, temppreview, rename, delrecover } from "../api/apis";
+import {
+  mytemp,
+  edittemp,
+  temppreview,
+  rename,
+  delrecover,
+  LoginLog,
+  publish
+} from "../api/apis";
 export default {
   name: "mytemp",
   data() {
@@ -79,7 +87,15 @@ export default {
         name: ""
       };
       mytemp(prams).then(res => {
-        this.tempinfo = res.data.data.sites;
+        if (res.data.status == 203) {
+          this.$message({
+            type: "info",
+            message: "请登陆或者注册"
+          });
+          window.location.href = "http://www.site.maoyt.com/index.html#/login";
+        } else {
+          this.tempinfo = res.data.data.sites;
+        }
       });
     },
     openul(val) {
@@ -90,9 +106,18 @@ export default {
       }
     },
     //开始编辑
-    starttemp(val) {
-      edittemp({ site_id: val }).then(res => {
-        window.open("http://www.site.maoyt.com", "_black");
+    starttemp(val, type) {
+      let prams = { site_id: val };
+      edittemp(prams).then(res => {
+        if (res.data.status == 0) {
+          window.location.href =
+            "http://www.site.maoyt.com/index.html#/index/:" + type;
+        } else {
+          this.$message({
+            message: res.data.msg,
+            type: "info"
+          });
+        }
       });
     },
     //预览
@@ -111,12 +136,17 @@ export default {
             if (res.data.status == 0) {
               this.$message({
                 type: "success",
-                message: "您要修改的名字是: " + value
+                message: "您要修改的名字是: " + value,
+                customClass: "msgposition",
+                center: true
               });
+              this.getInfo();
             } else {
               this.$message({
                 type: "error",
-                message: "服务器繁忙"
+                message: "服务器繁忙",
+                customClass: "msgposition",
+                center: true
               });
             }
           });
@@ -124,15 +154,46 @@ export default {
         .catch(() => {
           this.$message({
             type: "info",
-            message: "取消修改"
+            message: "取消修改",
+            customClass: "msgposition",
+            center: true
           });
         });
     },
     deltemp(val) {
-      delrecover({ site_id: val, status: 0 }).then(res => {});
+      delrecover({ site_id: val }).then(res => {
+        if (res.data.status == 0) {
+          this.$message({
+            message: "删除成功",
+            type: "success",
+            customClass: "msgposition",
+            center: true
+          });
+          this.getInfo();
+        }
+      });
     },
     copy(val) {},
-    fabu(val) {}
+    fabu(val) {
+      publish({ site_id: val }).then(res => {
+        if (res.data.status == 0) {
+          this.$message({
+            message: "发布成功",
+            type: "success",
+            customClass: "msgposition",
+            center: true
+          });
+        } else {
+          this.$message({
+            message: "发布失败",
+            type: "error",
+            customClass: "msgposition",
+            center: true
+          });
+        }
+      });
+      this.getInfo();
+    }
   }
 };
 </script>

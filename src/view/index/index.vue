@@ -11,7 +11,7 @@
           <li :class="[isactive==3 ? 'isactive' :'']" @click="SelectMenu(3)">帮助</li>
         </ul>
       </div>
-      <div class="headerright">
+      <div class="headerright" v-if="headershow">
         <div class="input" v-if="routerpath">
           <el-input
             class="searchinput"
@@ -25,10 +25,39 @@
           <i class="iconfont icon-manage_icon_message4"></i>
           <span></span>
         </div>
-        <div class="username">
-          <span>summer</span>
+        <div class="username" @mouseenter="enter" @mouseleave="leave">
+          <span>{{info.username}}</span>
           <div class="img"></div>
         </div>
+        <transition name="fade">
+          <div class="rightPro" v-if="rightshow" @mouseenter="enter2" @mouseleave="leave2">
+            <div class="info">
+              <div class="info_left">
+                <i class="iconfont icon-manage_icon_mail"></i>
+                <!-- <p>邮箱</p> -->
+              </div>
+              <div class="info_right">{{info.email}}</div>
+            </div>
+            <div class="info">
+              <div class="info_left">
+                <i class="iconfont icon-manage_icon_phone"></i>
+                <!-- <p>联系方式</p> -->
+              </div>
+              <div class="info_right">15709242457</div>
+            </div>
+            <div class="info">
+              <div class="info_left">
+                <i class="iconfont icon-manage_icon_user"></i>
+                <!-- <p>用户类型</p> -->
+              </div>
+              <div class="info_right">超级管理员</div>
+            </div>
+            <div class="btnout">
+              <el-button class="btn1" plain>修改</el-button>
+              <el-button class="btn2" type="primary" @click="outLogin">退出</el-button>
+            </div>
+          </div>
+        </transition>
       </div>
     </div>
     <section style="overflow: hidden;">
@@ -40,19 +69,76 @@
   </div>
 </template>
 <script>
+import { LoginLog, LoginOut } from "../../api/apis";
 export default {
   name: "index",
   data() {
     return {
       isactive: 1,
-      searchval: ""
+      searchval: "",
+      headershow: false,
+      rightshow: false,
+      info: {
+        email: "amdin.com",
+        username: "admin"
+      }
     };
+  },
+  created() {
+    this.Log();
   },
   methods: {
     SelectMenu(val) {
       this.isactive = val;
+      if (val == 1) {
+        this.$router.push("/index");
+      }
     },
-    search() {}
+    search() {},
+    Log() {
+      LoginLog().then(res => {
+        if (res.data.status == 0) {
+          this.info = res.data.data;
+          this.$router.push("/index");
+          this.headershow = true;
+        } else {
+          this.$router.push("/temp");
+          // this.headershow = true;
+        }
+      });
+    },
+    enter() {
+      this.rightshow = true;
+    },
+    enter2() {
+      this.rightshow = true;
+      this.timeOut = true;
+    },
+    leave() {
+      setTimeout(() => {
+        if (!this.timeOut) {
+          this.rightshow = false;
+        }
+      }, 300);
+    },
+    leave2() {
+      setTimeout(() => {
+        this.rightshow = false;
+        this.timeOut = false;
+      }, 300);
+    },
+    outLogin() {
+      LoginOut().then(res => {
+        if (res.data.status == 0) {
+          localStorage.clear();
+          window.location.reload();
+          this.$router.push("/temp");
+        }
+      });
+      // localStorage.clear();
+      // window.location.reload();
+      // this.$router.push("/login");
+    }
   },
   computed: {
     routerpath() {
@@ -212,6 +298,96 @@ export default {
           opacity: 1;
           margin-right: 9px;
         }
+      }
+      .rightPro {
+        position: absolute;
+        width: 230px;
+        background: rgba(255, 255, 255, 1);
+        right: 16px;
+        border: 1px solid rgba(221, 221, 221, 1);
+        top: 62px;
+        box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+        opacity: 1;
+        border-radius: 4px;
+        z-index: 20;
+        padding: 16px;
+        box-sizing: border-box;
+        -moz-user-select: none;
+        -o-user-select: none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        background-color: #fff;
+        .info {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: start;
+          font-size: 16px;
+          margin-bottom: 12px;
+          height: 18px;
+          .info_left {
+            display: flex;
+            align-items: center;
+            align-items: center;
+            height: 20px;
+            font-size: 14px;
+            width: 28px;
+            i {
+              font-size: 14px;
+              margin-right: 14px;
+              margin-top: 2px;
+              color: rgba(0, 0, 0, 0.65);
+            }
+            p {
+              line-height: 20px;
+            }
+          }
+          .info_right {
+            height: 18px;
+            font-size: 14px;
+            text-align: left;
+            color: rgba(0, 0, 0, 0.65);
+          }
+        }
+        /deep/ .btnout {
+          margin-top: 16px;
+          .el-button {
+            background: transparent;
+          }
+          display: flex;
+          .btn1,
+          .btn2 {
+            border: 1px solid #3ca860;
+            box-sizing: border-box;
+            flex: 1;
+            width: 95px;
+            height: 28px;
+            align-items: center;
+            display: flex;
+            padding: 0;
+            justify-content: center;
+            span {
+              font-size: 12px;
+            }
+          }
+          .btn1 {
+            color: #3ca860;
+          }
+          .btn2 {
+            flex: 1;
+            color: #fff;
+            background: #3ca860;
+          }
+        }
+      }
+      .fade-enter-active,
+      .fade-leave-active {
+        transition: opacity 0.5s;
+      }
+      .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+        opacity: 0;
       }
     }
   }

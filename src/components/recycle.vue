@@ -4,7 +4,7 @@
       <div class="temp">
         <div class="mytemp">
           <div class="temoleft">
-            <div class="tit">垃圾网站</div>
+            <div class="tit">回收站</div>
             <div class="ftit">选择垃圾站的网站，还原或者移除它。</div>
           </div>
           <div class="temoright">
@@ -43,8 +43,8 @@
       <div class="img">
         <img src="../assets/web_img_empty@2x.png" alt />
       </div>
-      <div class="tit">垃圾站中没有网站哦,</div>
-      <div class="tit">您目前还没有删除网站到垃圾站中。</div>
+      <div class="tit">回收站中没有网站哦,</div>
+      <div class="tit">您目前还没有删除网站到回收站中。</div>
     </div>
   </div>
 </template>
@@ -68,12 +68,13 @@ export default {
       });
     },
     recovertemp(val) {
-      recover({ site_id: val, status: 1 }).then(res => {
+      recover({ site_id: val }).then(res => {
         if (res.data.status == 0) {
           this.$message({
             type: "success",
             message: "恢复成功"
           });
+          this.getInfo();
         } else {
           this.$message({
             type: "error",

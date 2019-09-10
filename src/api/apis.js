@@ -61,9 +61,16 @@ export function delrecover(data) {
 }
 //网站编辑http://www.site.maoyt.com/api/global-site/site-edit
 export function edittemp(data) {
-    return getdataRequest($ + '/global-site/site-edit', data)
+    return postRequest($ + '/global-site/site-edit', data)
 }
 //网站名称http://www.site.maoyt.com/api/global-site/site-rename
 export function rename(data) {
     return postRequest($ + '/global-site/site-rename', data)
+}
+//loginlog   http://www.site.maoyt.com/api/login/log
+export function LoginLog(data) {
+    return postRequest($ + '/login/log', data)
+}
+export function LoginOut() {
+    return postRequest($ + '/login/logout')
 }

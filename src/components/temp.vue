@@ -14,7 +14,7 @@
                 <img src="../assets/temp.png" alt />
                 <div class="zhezhao">
                   <div class="pre" @click="preview(item.id)">预览</div>
-                  <div class="start" @click="starttemp(item.id)">开始编辑</div>
+                  <div class="start" @click="starttemp(item.site_id,item.type)">开始编辑</div>
                 </div>
               </div>
               <div class="Explain">
@@ -33,12 +33,13 @@
   </div>
 </template>
 <script>
-import { temptuijian, edittemp, temppreview } from "../api/apis";
+import { temptuijian, edittemp, temppreview, LoginLog } from "../api/apis";
 export default {
   name: "temp",
   data() {
     return {
-      tempinfo: ""
+      tempinfo: "",
+      login: ""
     };
   },
   created() {
@@ -48,6 +49,9 @@ export default {
     getInfo() {
       temptuijian({ limit: 30 }).then(res => {
         this.tempinfo = res.data.data.themes;
+      });
+      LoginLog().then(res => {
+        this.login = res.data.status;
       });
     },
 
@@ -61,10 +65,21 @@ export default {
       });
     },
     //编辑
-    starttemp(val) {
-      edittemp({ site_id: val }).then(res => {
-        window.open("http://www.site.maoyt.com", "_black");
+    starttemp(val, type) {
+      if (this.login == 203) {
+        this.$message({
+          type: "info",
+          message: "请先登陆或注册"
+        });
+        return;
+      }
+      // } else {
+      let prams = { site_id: val };
+      edittemp(prams).then(res => {
+        window.location.href =
+          "http://www.site.maoyt.com/index.html#/index/:" + type;
       });
+      // }
     }
   }
 };

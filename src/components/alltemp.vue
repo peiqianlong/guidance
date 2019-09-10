@@ -44,7 +44,7 @@
                   <img src="../assets/temp.png" alt />
                   <div class="zhezhao">
                     <div class="pre" @click="preview(item.id)">预览</div>
-                    <div class="start" @click="starttemp(item.id)">开始编辑</div>
+                    <div class="start" @click="starttemp(item.site_id,item.type)">开始编辑</div>
                   </div>
                 </div>
                 <div class="Explain">
@@ -64,7 +64,14 @@
   </div>
 </template>
 <script>
-import { alltemp, alltemptype, alltempindustry,temppreview,edittemp} from "../api/apis";
+import {
+  alltemp,
+  alltemptype,
+  alltempindustry,
+  temppreview,
+  edittemp,
+  LoginLog
+} from "../api/apis";
 export default {
   name: "alltemp",
   data() {
@@ -84,41 +91,49 @@ export default {
         }
       ],
       value3: "created_at",
-      templist: []
+      templist: [],
+      login: ""
     };
   },
   created() {
     this.getInfo();
+    this.list();
   },
   methods: {
+    list() {
+      alltemptype().then(res => {
+        this.options2 = res.data.data.types;
+      });
+      alltempindustry().then(res => {
+        this.options = res.data.data.industries;
+      });
+      LoginLog().then(res => {
+        this.login = res.data.status;
+      });
+    },
     getInfo() {
       let prams = {
-        type: "",
-        industry: "",
-        sort: ""
+        type: this.value2,
+        industry: this.value,
+        sort: this.value3
       };
       alltemp(prams).then(res => {
         if (res.data.status == 0) {
           this.templist = res.data.data.themes;
         }
       });
-      alltemptype().then(res => {
-        this.options2 = res.data.data.types;
-      }),
-        alltempindustry().then(res => {
-          this.options = res.data.data.industries;
-        });
     },
     //预览
-     preview(val) {
+    preview(val) {
       temppreview(val).then(res => {
         window.open("http:" + res.data.data.preview_url, "_black");
       });
     },
     //编辑
-    starttemp(val) {
+    starttemp(val, type) {
       edittemp({ site_id: val }).then(res => {
-        window.open("http://www.site.maoyt.com", "_black");
+        window.location.href =
+          "http://www.site.maoyt.com/index.html#/index/:" + type;
       });
     }
   }

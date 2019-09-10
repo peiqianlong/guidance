@@ -3,25 +3,37 @@
     <div class="tit">你想制作什么样的网站呢</div>
     <div class="occupationlist">
       <div class="item" v-for="(item , index) in 4" @click="Next('个人博客')" :key="index">
-        <div class="img"></div>
+        <div class="img">
+          <img class="img1" src="../assets/bg2.png" alt />
+          <img class="img2" src="../assets/bghover.png" alt />
+        </div>
         <div class="title">个人博客</div>
       </div>
     </div>
     <div class="occupationlist">
       <div class="item" v-for="(item , index) in 3" @click="Next('在线商城')" :key="index">
-        <div class="img"></div>
+        <div class="img">
+          <img class="img1" src="../assets/bg2.png" alt />
+          <img class="img2" src="../assets/bghover.png" alt />
+        </div>
         <div class="title">在线商城</div>
       </div>
     </div>
     <div class="occupationlist">
       <div class="item" v-for="(item , index) in 4" @click="Next('出口贸易')" :key="index">
-        <div class="img"></div>
+        <div class="img">
+          <img class="img1" src="../assets/bg2.png" alt />
+          <img class="img2" src="../assets/bghover.png" alt />
+        </div>
         <div class="title">出口贸易</div>
       </div>
     </div>
     <div class="occupationlist">
       <div class="item" v-for="(item , index) in 3" @click="Next('营销宣传')" :key="index">
-        <div class="img"></div>
+        <div class="img">
+          <img class="img1" src="../assets/bg2.png" alt />
+          <img class="img2" src="../assets/bghover.png" alt />
+        </div>
         <div class="title">营销宣传</div>
       </div>
     </div>
@@ -80,6 +92,16 @@ export default {
       opacity: 1;
       margin: 0 10px;
       flex-shrink: 0;
+      .img1 {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+      }
+      .img2 {
+        width: 100%;
+        height: 100%;
+        display: none;
+      }
     }
     .title {
       font-size: 14px;
@@ -95,6 +117,12 @@ export default {
     background: #fff;
     .img {
       background: #000;
+      .img1 {
+        display: none;
+      }
+      .img2 {
+        display: block;
+      }
     }
     .title {
       color: #3ca860;
